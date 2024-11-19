@@ -17,8 +17,10 @@ running = True
 moving = False
 tile_map = TileMap()
 tile_map.add_tile()
-POSTITION = [500, 500]
-
+position = [500, 500]
+LEFT = 1
+RIGHT = 3
+pygame.display.set_caption('Strategy Game')
 
 while running:
     # poll for events
@@ -26,6 +28,10 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_DOWN:
+                tile_map.add_tile()
 
         # Making the screen move
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -42,7 +48,9 @@ while running:
 
         # Make your image move continuously
         elif event.type == pygame.MOUSEMOTION and moving:
-            POSTITION = [POSTITION[0] + event.rel[0], POSTITION[1] + event.rel[1]]
+            position = [position[0] + event.rel[0], position[1] + event.rel[1]]
+        
+        
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
@@ -50,7 +58,7 @@ while running:
     # RENDER YOUR GAME HERE
     draw_map = tile_map.generate_map()
     for draw_tile in draw_map:
-        draw_regular_polygon(screen, draw_tile[0], draw_tile[1], draw_tile[2], POSTITION)
+        draw_regular_polygon(screen, draw_tile[0], draw_tile[1], draw_tile[2], [position[0]+draw_tile[3][0], position[1]+draw_tile[3][1]])
 
     # flip() the display to put your work on screen
     pygame.display.flip()
