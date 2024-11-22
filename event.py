@@ -18,6 +18,6 @@ class Event():
         else:
             self.title = ""
             self.description = ""
-            self.options = ""
+            self.options = []
             self.position = [550, 90]
 
