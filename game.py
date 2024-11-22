@@ -33,6 +33,7 @@ def draw_event(surface, active_events):
         y = event.position[1]
 
         pygame.draw.rect(surface=surface, color="gray", rect=pygame.Rect((x, y, width, height)))
+        pygame.draw.rect(surface=surface, color="dark gray", rect=pygame.Rect((x+5, y+5, 10, 10)))
     return
 
 pygame.init()
@@ -86,8 +87,12 @@ while running:
             moving = True
             x, y = pygame.mouse.get_pos() # Get click position
             for current_event in active_events:
-                if x >= current_event.position[0]-100 and x <= current_event.position[0]+100 and y >= current_event.position[1]-50 and y <= current_event.position[1]+50: # Check if click is within rectangle
+                if x >= current_event.position[0] and x <= current_event.position[0]+300 and y >= current_event.position[1] and y <= current_event.position[1]+50: # Check if click is within rectangle
                     selected_event = current_event
+                    if x >= current_event.position[0]+5 and x <= current_event.position[0]+15 and y >= current_event.position[1]+5 and y <= current_event.position[1]+15:
+                        active_events.remove(selected_event)
+                        selected_event = None
+                        
             
  
         # Set moving as False if you want 
