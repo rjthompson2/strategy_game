@@ -104,9 +104,6 @@ start_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0, 100
     anchors={'centerx': 'centerx',
             'centery': 'centery'})
 
-#Events
-active_events = []
-
 while running:
     time_delta = clock.tick(60)/1000.0
     
@@ -121,14 +118,13 @@ while running:
             if event.ui_element == start_button:  
                 tile_map.add_tile()
                 manager.clear_and_reset()
-                active_events.append(Event("Starting Event"))
+                chain.add_event(Event("Starting Event"))
             elif event.ui_element in chain.button_option.keys():
                 #TODO remove the event from the screen
                 #clear all options in that event from the list
                 #activate the option
                 option = chain.button_option[event.ui_element]
-                active_events.remove(chain.option_event[option])
-                chain.remove(option)
+                chain.remove_option(option)
                 manager.clear_and_reset()
 
         #DEV add a new tile on down key
@@ -140,12 +136,13 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             moving = True
             x, y = pygame.mouse.get_pos() # Get click position
-            for current_event in active_events:
+            for current_event in chain.active_events:
                 if x >= current_event.position[0] and x <= current_event.position[0]+300 and y >= current_event.position[1] and y <= current_event.position[1]+20: # Check if click is within rectangle
                     selected_event = current_event
                     if x >= current_event.position[0]+5 and x <= current_event.position[0]+15 and y >= current_event.position[1]+5 and y <= current_event.position[1]+15:
-                        active_events.remove(selected_event)
+                        chain.remove_event(selected_event)
                         selected_event = None
+                        manager.clear_and_reset()
                         
             
  
@@ -195,8 +192,8 @@ while running:
     for draw_tile in draw_map:
         draw_regular_polygon(screen, draw_tile[0], draw_tile[1], draw_tile[2], [position[0]+draw_tile[3][0], position[1]+draw_tile[3][1]])
 
-    if active_events != []:
-        draw_event(screen, active_events)
+    if chain.active_events != []:
+        draw_event(screen, chain.active_events)
         
     manager.draw_ui(screen)
 
