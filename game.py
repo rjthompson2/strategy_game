@@ -2,26 +2,28 @@ import pygame
 import pygame_gui
 from tile import TileMap
 from event import Event
+from chain import EventOptionChain
 from math import *
 
 MAX_WIDTH = 1280
 MAX_HEIGHT = 720
+LEFT = 1
+RIGHT = 3
 
 
 pygame.init()
+pygame.display.set_caption('Strategy Game')
 screen = pygame.display.set_mode((MAX_WIDTH, MAX_HEIGHT))
 clock = pygame.time.Clock()
+manager = pygame_gui.UIManager((MAX_WIDTH, MAX_HEIGHT))
+
 running = True
 moving = False
 tile_map = TileMap()
 position = [650, 400]
-LEFT = 1
-RIGHT = 3
 zoom = 0
-pygame.display.set_caption('Strategy Game')
 selected_event = None
-event_options = []
-manager = pygame_gui.UIManager((800, 600))
+chain = EventOptionChain()
 
 #Font
 pygame.font.init()
@@ -85,16 +87,18 @@ def draw_event(surface, active_events):
             i += 15
         i += 15
         
-        option_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((x+10, y+i, width-20, 50)),
-            text=event.options[0],
-            manager=manager)
-        event_options.append(option_button)
-
+        for option in event.options:
+            option_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((x+10, y+i, width-20, 50)),
+                text=option,
+                manager=manager)
+            i += 55
+            chain.add_pair_options(option, option_button)
+        chain.add_pair_event(event)
     return
 
 #GUI
 gui = True
-start_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((250, 80, 100, 50)),
+start_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0, 100, 50)),
     text='New Game',
     manager=manager,
     anchors={'centerx': 'centerx',
@@ -114,10 +118,18 @@ while running:
         
         #UI Button
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
-              if event.ui_element == start_button:  
+            if event.ui_element == start_button:  
                 tile_map.add_tile()
                 manager.clear_and_reset()
                 active_events.append(Event("Starting Event"))
+            elif event.ui_element in chain.button_option.keys():
+                #TODO remove the event from the screen
+                #clear all options in that event from the list
+                #activate the option
+                option = chain.button_option[event.ui_element]
+                active_events.remove(chain.option_event[option])
+                chain.remove(option)
+                manager.clear_and_reset()
 
         #DEV add a new tile on down key
         elif event.type == pygame.KEYDOWN:
