@@ -19,6 +19,8 @@ class Tile():
         if self.adjacency == []:
             self.biome = random.choice(biome_list)
             return
+
+        #TODO generate biomes better
         adjacent_biomes = biome_list
         for tile in self.adjacency:
             if tile != 0:
