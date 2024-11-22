@@ -93,6 +93,7 @@ def draw_event(surface, active_events):
     return
 
 #GUI
+gui = True
 start_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((250, 80, 100, 50)),
     text='New Game',
     manager=manager,
@@ -115,7 +116,7 @@ while running:
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
               if event.ui_element == start_button:  
                 tile_map.add_tile()
-                manager.remove_element(start_button)
+                manager.clear_and_reset()
                 active_events.append(Event("Starting Event"))
 
         #DEV add a new tile on down key
@@ -153,6 +154,7 @@ while running:
 
         elif event.type == pygame.MOUSEMOTION and moving:
             if selected_event:
+                manager.clear_and_reset()
                 selected_event.position = [selected_event.position[0] + event.rel[0], selected_event.position[1] + event.rel[1]]
             else:
                 position = [position[0] + event.rel[0], position[1] + event.rel[1]]
@@ -183,6 +185,7 @@ while running:
 
     if active_events != []:
         draw_event(screen, active_events)
+        
     manager.draw_ui(screen)
 
     
