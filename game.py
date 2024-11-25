@@ -1,8 +1,9 @@
 import pygame
 import pygame_gui
-from tile import TileMap
-from event import Event
+from tiles.tile import TileMap
+from events.event import Event
 from chain import EventOptionChain
+from units import Units
 from math import *
 
 MAX_WIDTH = 1280
@@ -20,6 +21,7 @@ manager = pygame_gui.UIManager((MAX_WIDTH, MAX_HEIGHT))
 running = True
 moving = False
 tile_map = TileMap()
+units = Units()
 position = [650, 400]
 zoom = 0
 selected_event = None
@@ -96,6 +98,9 @@ def draw_event(surface, active_events):
         chain.add_pair_event(event)
     return
 
+def draw_unit(surface, unit):
+    pygame.draw.circle(surface, (80, 80, 80), [position[0]+unit.current_tile.position[0], position[1]+unit.current_tile.position[1]], 20)
+
 #GUI
 gui = True
 start_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0, 100, 50)),
@@ -124,7 +129,7 @@ while running:
                 #clear all options in that event from the list
                 #activate the option
                 option = chain.button_option[event.ui_element]
-                chain.remove_option(option)
+                chain.remove_and_choose_option(option, tile_map)
                 manager.clear_and_reset()
 
         #DEV add a new tile on down key
@@ -194,6 +199,9 @@ while running:
 
     if chain.active_events != []:
         draw_event(screen, chain.active_events)
+    
+    for unit in units.unit_list:
+        draw_unit(screen, unit)
         
     manager.draw_ui(screen)
 

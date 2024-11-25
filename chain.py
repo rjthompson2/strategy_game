@@ -17,6 +17,16 @@ class EventOptionChain():
         for option in event.options:
             self.option_event.update({option: event})
 
+    def remove_and_choose_option(self, option, tile_map):
+        button = self.option_button[option]
+        event = self.option_event[option]
+        event.choice(option, tile_map)
+        del self.button_option[button]
+        del self.option_button[option]
+        del self.option_event[option]
+        self.active_events.remove(event)
+
+
     def remove_option(self, option):
         button = self.option_button[option]
         event = self.option_event[option]

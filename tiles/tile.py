@@ -6,18 +6,40 @@ biome_dictionary = {
     "plains": "light green",
     "mountains": "grey"
 }
+biome_soil = {
+    "forrest": {
+        "soil": 8,
+        "forage": 8
+    },
+    "desert": {
+        "soil": 0,
+        "forage": 3
+    },
+    "plains": {
+        "soil": 10,
+        "forage": 8
+    },
+    "mountains": {
+        "soil": 3,
+        "forage": 4
+    }
+}
 
 class Tile():
     def __init__(self):
         self.biome = None
         self.adjacency = [0, 0, 0, 0, 0, 0]
         self.position = [0, 0]
+        self.soil = None
+        self.forage = None
 
     def generate_biome(self):
         if self.biome:
             return
         if self.adjacency == []:
             self.biome = random.choice(biome_list)
+            self.soil = biome_soil[self.biome]["soil"]
+            self.forage = biome_soil[self.biome]["forage"]
             return
 
         #TODO generate biomes better
@@ -43,6 +65,7 @@ class Tile():
             self.position = [old_position[0]-156, old_position[1]+90]
         elif position == 5:
             self.position = [old_position[0]-156, old_position[1]-90]
+
 
 class TileMap():
     def __init__(self):
