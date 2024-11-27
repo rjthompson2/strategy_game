@@ -5,6 +5,7 @@ class Unit():
         self.food = 0
         self.type = None
         self.amount = 10
+        self.color = (150, 100, 100)
     
     def set_type(self, new_type):
         self.type = new_type
@@ -17,6 +18,9 @@ class Unit():
                 self.food += amount*self.current_tile.forage
         else:
             self.food += amount*self.current_tile.soil
+    
+    def change_color(self, color):
+        self.color = color
 
 class Units():
     unit_list = []

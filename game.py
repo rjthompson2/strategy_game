@@ -25,6 +25,7 @@ units = Units()
 position = [650, 400]
 zoom = 0
 selected_event = None
+selected_unit = None
 chain = EventOptionChain()
 
 #Font
@@ -99,7 +100,7 @@ def draw_event(surface, active_events):
     return
 
 def draw_unit(surface, unit):
-    pygame.draw.circle(surface, (80, 80, 80), [position[0]+unit.current_tile.position[0], position[1]+unit.current_tile.position[1]], 20)
+    pygame.draw.circle(surface, unit.color, [position[0]+unit.current_tile.position[0], position[1]+unit.current_tile.position[1]], 20)
 
 #GUI
 gui = True
@@ -118,14 +119,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
-        #UI Button
+        #UI Buttons
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == start_button:  
                 tile_map.add_tile()
                 manager.clear_and_reset()
                 chain.add_event(Event("Starting Event"))
             elif event.ui_element in chain.button_option.keys():
-                #TODO remove the event from the screen
                 #clear all options in that event from the list
                 #activate the option
                 option = chain.button_option[event.ui_element]
@@ -133,14 +133,15 @@ while running:
                 manager.clear_and_reset()
 
         #DEV add a new tile on down key
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
-                tile_map.add_tile()
+        # elif event.type == pygame.KEYDOWN:
+        #     if event.key == pygame.K_DOWN:
+        #         tile_map.add_tile()
 
         # Making the screen move
         elif event.type == pygame.MOUSEBUTTONDOWN:
             moving = True
             x, y = pygame.mouse.get_pos() # Get click position
+            lock = False
             for current_event in chain.active_events:
                 if x >= current_event.position[0] and x <= current_event.position[0]+300 and y >= current_event.position[1] and y <= current_event.position[1]+20: # Check if click is within rectangle
                     selected_event = current_event
@@ -148,6 +149,23 @@ while running:
                         chain.remove_event(selected_event)
                         selected_event = None
                         manager.clear_and_reset()
+                    lock = True
+            # Locks to prevent clicking multiple different objects
+            if not lock:
+                for unit in units.unit_list:
+                    if x >= position[0]+unit.current_tile.position[0]-10 and x <= position[0]+unit.current_tile.position[0]+10 and y >= position[1]+unit.current_tile.position[1]-10 and y <= position[1]+unit.current_tile.position[1]+10:
+                        original = (150, 100, 100)
+                        new = (90, 60, 60)
+                        # Select a unit
+                        if unit.color == original and selected_unit is None:
+                            unit.change_color(new)
+                            selected_unit = unit
+                        # Deselect aunit
+                        elif selected_unit:
+                            selected_unit = None
+                            unit.change_color(original)
+                        lock = True
+
                         
             
  
