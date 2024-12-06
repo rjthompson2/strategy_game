@@ -1,3 +1,5 @@
+import pygame
+
 class Unit():
     def __init__(self, tile):
         self.current_tile = tile
@@ -21,6 +23,9 @@ class Unit():
     
     def change_color(self, color):
         self.color = color
+
+    def draw_unit(self, surface):
+        pygame.draw.circle(surface, self.color, [position[0]+self.current_tile.position[0], position[1]+self.current_tile.position[1]], 20)
 
 class Units():
     unit_list = []
