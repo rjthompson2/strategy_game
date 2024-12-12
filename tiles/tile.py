@@ -1,4 +1,7 @@
 import random
+import pygame
+from math import *
+
 biome_list = ["forrest", "desert", "plains", "mountains"]
 biome_dictionary = {
     "forrest": "dark green",
@@ -48,6 +51,8 @@ class Tile():
             if tile != 0:
                 adjacent_biomes.append(tile.biome)
         self.biome = random.choice(biome_list)
+        self.soil = biome_soil[self.biome]["soil"]
+        self.forage = biome_soil[self.biome]["forage"]
 
     def get_color(self) -> str:
         return biome_dictionary[self.biome]
@@ -65,6 +70,14 @@ class Tile():
             self.position = [old_position[0]-156, old_position[1]+90]
         elif position == 5:
             self.position = [old_position[0]-156, old_position[1]-90]
+
+    def draw_regular_polygon(self, surface, color, vertex_count, radius, position, width=0):
+        n, r = vertex_count, radius
+        x, y = position
+        pygame.draw.polygon(surface, color, [
+            (x + r * cos(2 * pi * i / n), y + r * sin(2 * pi * i / n))
+            for i in range(n)
+        ], width)
 
 
 class TileMap():
@@ -104,3 +117,13 @@ class TileMap():
         for tile in self.tiles:
             _map.append([tile.get_color(), 6, 100, tile.position])
         return _map
+
+
+
+def draw_regular_polygon(surface, color, vertex_count, radius, position, width=0):
+    n, r = vertex_count, radius
+    x, y = position
+    pygame.draw.polygon(surface, color, [
+        (x + r * cos(2 * pi * i / n), y + r * sin(2 * pi * i / n))
+        for i in range(n)
+    ], width)

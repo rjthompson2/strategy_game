@@ -8,7 +8,20 @@ events_dict = {
         "description": "Our clan has roamed this area for many generations. We have struggled to survive, but some new arrivals have told us of their unique ways of life. Should we change our way of life or stick to the traditions of our ancestors?",
         "options": ["We will be Farmers", "We will be Herders", "We will continue as Hunter Gatherers"],
         "commands": [option_farmer, option_herder, option_hunter_gatherer]
-    }
+    },
+    "Eary Farmer": [{
+        "title": "Flu Season",
+        "description": "Our people are falling under a mysterious spell. Coughing, sweating, and death loom. What should we do?",
+        "options": ["Nothing. This will pass", "This is a sign. We must renounce our way of life"],
+        "commands": [option_farmer, option_herder, option_hunter_gatherer]
+    },
+    {
+        "title": "",
+        "description": "Our clan has roamed this area for many generations. We have struggled to survive, but some new arrivals have told us of their unique ways of life. Should we change our way of life or stick to the traditions of our ancestors?",
+        "options": ["We will be Farmers", "We will be Herders", "We will continue as Hunter Gatherers"],
+        "commands": [option_farmer, option_herder, option_hunter_gatherer]
+    }],
+
 }
 
 
@@ -27,11 +40,13 @@ class Event():
             self.description = events_dict[name]["description"]
             self.options = events_dict[name]["options"]
             self.position = [550, 90]
+            self.options_positions = [[] for value in self.options]
         else:
             self.title = ""
             self.description = ""
             self.options = []
             self.position = [550, 90]
+            self.options_positions = [[] for value in self.options]
 
     def choice(self, option, tile_map):
         current_event_dict = events_dict[self.name]
@@ -87,9 +102,10 @@ class Event():
             i += 15
         i += 15
         
-        for option in self.options:
+        for index, option in enumerate(self.options):
             #create options buttons
             option_button = pygame.draw.rect(surface=surface, color=(90, 90, 90), rect=pygame.Rect((x+10, y+i, width-20, 50)))
+            self.options_positions[index] = [x+10, y+i, x+10+width-20, y+i+50]
             font_width, font_height = option_font.size(option)
             option_text = option_font.render(option, False, (200, 200, 200))
             surface.blit(option_text, (x+(width)//2-font_width//2, y+i+50//2-font_height//2))

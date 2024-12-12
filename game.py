@@ -1,10 +1,9 @@
 import pygame
 import pygame_gui
-from tiles.tile import TileMap
+from tiles.tile import TileMap, draw_regular_polygon
 from events.event import Event
 from chain import EventOptionChain
 from units import Units
-from math import *
 from utils import *
 
 
@@ -13,29 +12,23 @@ pygame.display.set_caption('Strategy Game')
 screen = pygame.display.set_mode((MAX_WIDTH, MAX_HEIGHT))
 clock = pygame.time.Clock()
 manager = pygame_gui.UIManager((MAX_WIDTH, MAX_HEIGHT))
-
-running = True
-moving = False
-tile_map = TileMap()
-units = Units()
-position = [650, 400]
-# zoom = 0
-selected_event = None
-selected_unit = None
-chain = EventOptionChain()
-turn = 1
-
 #Font
 pygame.font.init()
 turn_font = pygame.font.SysFont('arial', 30)
 
-def draw_regular_polygon(surface, color, vertex_count, radius, position, width=0):
-    n, r = vertex_count, radius
-    x, y = position
-    pygame.draw.polygon(surface, color, [
-        (x + r * cos(2 * pi * i / n), y + r * sin(2 * pi * i / n))
-        for i in range(n)
-    ], width)
+running = True
+moving = False
+selected_event = None
+selected_unit = None
+
+position = [650, 400]
+
+turn = 1
+# zoom = 0
+
+chain = EventOptionChain()
+tile_map = TileMap()
+units = Units()
 
 #GUI
 gui = True
@@ -69,6 +62,9 @@ while running:
             elif event.ui_element == end_turn_button:
                 #TODO implement what happens at the end of the turn
                 turn += 1
+                # chance to add an event
+                # units update
+                units.update()
             elif event.ui_element in chain.button_option.keys():
                 #clear all options in that event from the list
                 #activate the option
@@ -87,12 +83,21 @@ while running:
             x, y = pygame.mouse.get_pos() # Get click position
             lock = False
             for current_event in chain.active_events:
+                # Top bar selected
                 if x >= current_event.position[0] and x <= current_event.position[0]+300 and y >= current_event.position[1] and y <= current_event.position[1]+20: # Check if click is within rectangle
                     selected_event = current_event
                     # Close event
                     if x >= current_event.position[0]+5 and x <= current_event.position[0]+15 and y >= current_event.position[1]+5 and y <= current_event.position[1]+15:
                         chain.remove_event(selected_event)
                         selected_event = None
+                    lock = True
+                # Event option selected
+                else:
+                    for i, option in enumerate(current_event.options_positions):
+                        if x >= option[0] and x <= option[2] and y >= option[1] and y <= option[3]:
+                            # figure out which option was selected
+                            chain.remove_and_choose_option(current_event.options[i], tile_map)
+                            break
                     lock = True
             # Locks to prevent clicking multiple different objects
             if not lock:
@@ -148,7 +153,9 @@ while running:
         draw_regular_polygon(screen, draw_tile[0], draw_tile[1], draw_tile[2], [position[0]+draw_tile[3][0], position[1]+draw_tile[3][1]])
 
     for unit in units.unit_list:
-        unit.draw_unit(screen)
+        unit.draw_unit(screen, position)
+        if selected_unit:
+            selected_unit.display_info(screen, position)
     
     if chain.active_events != []:
         for active_event in chain.active_events:
