@@ -1,4 +1,5 @@
 import pygame
+import random
 from events.event_commands import *
 from utils import *
 
@@ -9,18 +10,24 @@ events_dict = {
         "options": ["We will be Farmers", "We will be Herders", "We will continue as Hunter Gatherers"],
         "commands": [option_farmer, option_herder, option_hunter_gatherer]
     },
-    "Eary Farmer": [{
+    "Eary Herder Flu Season": {
         "title": "Flu Season",
         "description": "Our people are falling under a mysterious spell. Coughing, sweating, and death loom. What should we do?",
         "options": ["Nothing. This will pass", "This is a sign. We must renounce our way of life"],
-        "commands": [option_farmer, option_herder, option_hunter_gatherer]
+        "commands": [flu_nothing, flu_change]
     },
-    {
-        "title": "",
-        "description": "Our clan has roamed this area for many generations. We have struggled to survive, but some new arrivals have told us of their unique ways of life. Should we change our way of life or stick to the traditions of our ancestors?",
-        "options": ["We will be Farmers", "We will be Herders", "We will continue as Hunter Gatherers"],
-        "commands": [option_farmer, option_herder, option_hunter_gatherer]
-    }],
+    "Eary Farmer Herder Hunter Gatherer Year of Plenty": {
+        "title": "Year of Plenty",
+        "description": "Great tidings! Our stock has increaded in size",
+        "options": ["We shall have a feast", "We shall add it to our stockpile", "Let us show thanks with a sacrifice"],
+        "commands": [plenty_feast, plenty_stock, plenty_sacrifice]
+    },
+    "Eary Farmer Drought Season": {
+        "title": "Flu Season",
+        "description": "The sky produces no rain and our fields grow barren. What should we do?",
+        "options": ["Nothing. This will pass", "This is a sign. We must renounce our way of life"],
+        "commands": [flu_nothing, flu_change]
+    },
 
 }
 
@@ -94,7 +101,6 @@ class Event():
         if description != "":
             description_text_list.append(description_font.render(description, False, (0, 0, 0)))
 
-
         surface.blit(title_text, (x+10, y+20))
         i = 50
         for description_text in description_text_list:
@@ -110,3 +116,21 @@ class Event():
             option_text = option_font.render(option, False, (200, 200, 200))
             surface.blit(option_text, (x+(width)//2-font_width//2, y+i+50//2-font_height//2))
             i += 55
+
+def event_chance(unit_type, turn):
+    # TODO add in turns to filter by early, middle, late stage content
+    # Or figure out another way like civilizations forming vs units, etc.
+    available_events = []
+    for event in events_dict.keys():
+        if unit_type.title() in event:
+            available_events.append(event)
+    if available_events == []:
+        return False
+    
+    choice = random.randint(1,10)
+    if choice <= 7:
+        return False
+    
+    name = random.choice(available_events)
+    return Event(name)
+

@@ -1,7 +1,7 @@
 import pygame
 import pygame_gui
 from tiles.tile import TileMap, draw_regular_polygon
-from events.event import Event
+from events.event import Event, event_chance
 from chain import EventOptionChain
 from units import Units
 from utils import *
@@ -62,7 +62,14 @@ while running:
             elif event.ui_element == end_turn_button:
                 #TODO implement what happens at the end of the turn
                 turn += 1
+                # fulfill all old events
+                if chain.active_events != []:
+                    for active_event in chain.active_events:
+                        chain.remove_and_choose_option(active_event.options[0], tile_map)
                 # chance to add an event
+                new_event = event_chance(units.unit_list[0].type, turn)
+                if new_event:
+                    chain.add_event(new_event)
                 # units update
                 units.update()
             elif event.ui_element in chain.button_option.keys():
@@ -70,12 +77,6 @@ while running:
                 #activate the option
                 option = chain.button_option[event.ui_element]
                 chain.remove_and_choose_option(option, tile_map)
-
-
-        #DEV add a new tile on down key
-        # elif event.type == pygame.KEYDOWN:
-        #     if event.key == pygame.K_DOWN:
-        #         tile_map.add_tile()
 
         # Making the screen move
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -101,10 +102,17 @@ while running:
                     lock = True
             # Locks to prevent clicking multiple different objects
             if not lock:
+                original = (150, 100, 100)
+                new = (90, 60, 60)
+                if selected_unit and selected_unit.can_move:
+                    neighbor = selected_unit.within_neightbors([x-position[0], y-position[1]])
+                    if neighbor:
+                        selected_unit.current_tile = neighbor
+                        selected_unit.change_color(original)
+                        selected_unit.can_move = False
+                        selected_unit = None
                 for unit in units.unit_list:
                     if x >= position[0]+unit.current_tile.position[0]-10 and x <= position[0]+unit.current_tile.position[0]+10 and y >= position[1]+unit.current_tile.position[1]-10 and y <= position[1]+unit.current_tile.position[1]+10:
-                        original = (150, 100, 100)
-                        new = (90, 60, 60)
                         # Select a unit
                         if unit.color == original and selected_unit is None:
                             unit.change_color(new)
