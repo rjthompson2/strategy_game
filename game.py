@@ -20,6 +20,7 @@ running = True
 moving = False
 selected_event = None
 selected_unit = None
+civilization = False
 
 position = [650, 400]
 
@@ -122,6 +123,10 @@ while running:
                             selected_unit = None
                             unit.change_color(original)
                         lock = True
+                    # Event to create a civilization at 100 population
+                    if unit.amount >= 100 and not civilization:
+                        chain.add_event(Event("Civilization"))
+                        civilization = True
                
         # Set moving as False if you want 
         # to move the screen only with the 

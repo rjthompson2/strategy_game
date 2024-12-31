@@ -6,7 +6,9 @@ display_font = pygame.font.SysFont('timesnewroman', 20)
 unit_movements = {
     "farmer": 0,
     "herder": 1,
-    "hunter gatherer": 2
+    "hunter gatherer": 2,
+    "civilization": 0,
+    "nomadic clan": 1
 }
 
 class Unit():
@@ -26,10 +28,10 @@ class Unit():
         self.current_moves = self.total_moves
 
     def get_food(self):
-        if self.type != "farmer":
-            if self.type == "herder":
+        if self.type not in ["farmer", "civilization"]:
+            if self.type in ["herder", "nomadic clan"]:
                 self.food += (self.amount/2)*5 - self.amount*1.5
-            else:
+            elif self.type == "hunter gatherer":
                 self.food += (self.amount/2)*self.current_tile.forage - self.amount*1.5
         else:
             self.food += (self.amount/2)*self.current_tile.soil - self.amount*1.5

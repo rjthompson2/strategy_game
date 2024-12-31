@@ -52,7 +52,7 @@ def flu_change(tile_map):
 # Option: "We shall have a feast"
 def plenty_feast(tile_map):
     for unit in units.unit_list:
-        unit.amount += 3
+        unit.amount += (unit.amount*0.3)//1
     return
 
 # Event: "Year of Plenty"
@@ -71,9 +71,11 @@ def plenty_sacrifice(tile_map):
 # Event: "Civilization"
 # Option: "One brick at a time"
 def create_civilization(tile_map):
-    #TBD
     new_civ = units.unit_list[0]
-    # if 
+    if new_civ.type == "farmer":
+        new_civ.set_type("civilization")
+    else:
+        new_civ.set_type("nomadic clan")
 
 # Allows player to choose to do nothing
 def nothing(tile_map):
