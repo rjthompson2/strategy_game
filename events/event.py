@@ -10,7 +10,7 @@ events_dict = {
         "options": ["We will be Farmers", "We will be Herders", "We will continue as Hunter Gatherers"],
         "commands": [option_farmer, option_herder, option_hunter_gatherer]
     },
-    "Eary Herder Flu Season": {
+    "Eary Herder Hunter Gatherer Flu Season": {
         "title": "Flu Season",
         "description": "Our people are falling under a mysterious spell. Coughing, sweating, and death loom. What should we do?",
         "options": ["Nothing. This will pass", "This is a sign. We must renounce our way of life"],
@@ -22,13 +22,18 @@ events_dict = {
         "options": ["We shall have a feast", "We shall add it to our stockpile", "Let us show thanks with a sacrifice"],
         "commands": [plenty_feast, plenty_stock, plenty_sacrifice]
     },
-    "Eary Farmer Drought Season": {
-        "title": "Flu Season",
+    "Eary Farmer Drought": {
+        "title": "Drought",
         "description": "The sky produces no rain and our fields grow barren. What should we do?",
         "options": ["Nothing. This will pass", "This is a sign. We must renounce our way of life"],
         "commands": [flu_nothing, flu_change]
     },
-
+    "Civilization": {
+        "title": "Civilization",
+        "description": "Our people are numerous. There is enough food for everyone to survive. They share a common language, culture, and history. Shall we birth a new civilization?",
+        "options": ["One brick at a time", "I choose anarchy!"],
+        "commands": [create_civilization, nothing]
+    }
 }
 
 

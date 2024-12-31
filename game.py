@@ -104,12 +104,12 @@ while running:
             if not lock:
                 original = (150, 100, 100)
                 new = (90, 60, 60)
-                if selected_unit and selected_unit.can_move:
+                if selected_unit and selected_unit.current_moves > 0:
                     neighbor = selected_unit.within_neightbors([x-position[0], y-position[1]])
                     if neighbor:
                         selected_unit.current_tile = neighbor
                         selected_unit.change_color(original)
-                        selected_unit.can_move = False
+                        selected_unit.current_moves -= 1
                         selected_unit = None
                 for unit in units.unit_list:
                     if x >= position[0]+unit.current_tile.position[0]-10 and x <= position[0]+unit.current_tile.position[0]+10 and y >= position[1]+unit.current_tile.position[1]-10 and y <= position[1]+unit.current_tile.position[1]+10:

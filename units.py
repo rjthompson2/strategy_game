@@ -3,6 +3,12 @@ import pygame
 pygame.font.init()
 display_font = pygame.font.SysFont('timesnewroman', 20)
 
+unit_movements = {
+    "farmer": 0,
+    "herder": 1,
+    "hunter gatherer": 2
+}
+
 class Unit():
     def __init__(self, tile):
         self.current_tile = tile
@@ -11,10 +17,13 @@ class Unit():
         self.type = None
         self.amount = 10
         self.color = (150, 100, 100)
-        self.can_move = True
+        self.current_moves = 0
+        self.total_moves = 0
     
     def set_type(self, new_type):
         self.type = new_type
+        self.total_moves = unit_movements[new_type]
+        self.current_moves = self.total_moves
 
     def get_food(self):
         if self.type != "farmer":
@@ -54,7 +63,7 @@ class Units():
     
     def update(self):
         for i, unit in enumerate(self.unit_list):
-            unit.can_move = True
+            unit.current_moves = unit.total_moves
             unit.get_food()
             if unit.food <= 0:
                 unit.health -= 10
@@ -67,4 +76,4 @@ class Units():
             elif unit.food < unit.amount:
                 unit.amount = unit.amount*(unit.food/unit.amount)//1
             if unit.health <= 0 or unit.amount <= 0:
-                self.unit_list.remove(i)
+                self.unit_list.remove(unit)

@@ -67,3 +67,14 @@ def plenty_stock(tile_map):
 def plenty_sacrifice(tile_map):
     #TBD
     return
+
+# Event: "Civilization"
+# Option: "One brick at a time"
+def create_civilization(tile_map):
+    #TBD
+    new_civ = units.unit_list[0]
+    # if 
+
+# Allows player to choose to do nothing
+def nothing(tile_map):
+    return

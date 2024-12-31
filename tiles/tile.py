@@ -20,7 +20,7 @@ biome_soil = {
     },
     "plains": {
         "soil": 10,
-        "forage": 8
+        "forage": 6
     },
     "mountains": {
         "soil": 3,
