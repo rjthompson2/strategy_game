@@ -2,7 +2,7 @@ import pygame
 import pygame_gui
 from tiles.tile import TileMap, draw_regular_polygon
 from events.event import Event, event_chance
-from chain import EventOptionChain
+from events.chain import EventOptionChain
 from units import Units
 from utils import *
 
